@@ -46,10 +46,7 @@ class depthEstimator():
         
         # Processar a saída do modelo para se obter o Disparity
         disparity = self.processDisparity(outputModel)
-        
-        # Calcular o FPS
-        self.updateFPS()
-    
+          
         return disparity    
     
     def prepareInput(self, img):
@@ -99,11 +96,6 @@ class depthEstimator():
         disparity = cv.resize(disparity, (self.img_shape[1], self.img_shape[0]), interpolation = cv.INTER_CUBIC)
         
         return disparity
-    
-    def updateFPS(self):
-        timeNow = time.time()
-        self.fps = round(1/(timeNow - self.lastTime), 2)
-        self.lastTime = timeNow
         
         
 if __name__ == "__main__":
@@ -126,12 +118,12 @@ if __name__ == "__main__":
         combinedImg = np.hstack((img, disparity))
         
         # Mostrar Imagem e FPS
-        cv.putText(combinedImg, (f"FPS: {depth_estimator.fps}"), (660, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (163,138,255), 2)
+        #cv.putText(combinedImg, (f"FPS: {depth_estimator.fps}"), (660, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (163,138,255), 2)
         cv.imshow("Depth Map", combinedImg)
         
         # Pressione a tecla "q" para parar
         if cv.waitKey(1) == ord("q"):
             break
-        
+    
     camera.release()
     cv.destroyAllWindows()
