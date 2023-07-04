@@ -16,15 +16,18 @@ if __name__ == "__main__":
         # Ler um frame da camera
         ret, img = camera.read()
         
-        # Estimar Profundidade
-        disparity = depth_estimator.estimatorDepthMap(img)
-        
-        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-        combinedImg = np.hstack((img, disparity))
-        
-        # Mostrar Imagem e FPS
-        #cv.putText(combinedImg, (f"FPS: {depth_estimator.fps}"), (660, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (163,138,255), 2)
-        cv.imshow("Depth Map", combinedImg)
+        if ret:
+            # Estimar Profundidade
+            disparity = depth_estimator.estimatorDepthMap(img)
+            
+            img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+            combinedImg = np.hstack((img, disparity))
+            
+            # Mostrar Imagem e FPS
+            #cv.putText(combinedImg, (f"FPS: {depth_estimator.fps}"), (660, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (163,138,255), 2)
+            cv.imshow("Depth Map", combinedImg)
+        else:
+            print("Failed to read the Frame!")
         
         # Pressione a tecla "q" para parar
         if cv.waitKey(1) == ord("q"):
