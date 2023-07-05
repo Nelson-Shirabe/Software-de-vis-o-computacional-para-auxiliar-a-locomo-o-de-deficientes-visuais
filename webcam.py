@@ -30,8 +30,8 @@ if __name__ == "__main__":
            
             # Objetos Próximos
             objects = nearbyObjects.nearby_objects()
-            objects = objects.warning(disparity) 
-            
+            objects, I = objects.warning(disparity) 
+            print("I =",I)
             # Combinar imagem de entrada e depth map
             img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
             combinedImg = np.hstack((img, disparity, objects))
