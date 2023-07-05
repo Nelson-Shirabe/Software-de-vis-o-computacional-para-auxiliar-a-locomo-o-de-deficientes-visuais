@@ -31,7 +31,8 @@ if __name__ == "__main__":
             # Objetos Próximos
             objects = nearbyObjects.nearby_objects()
             objects, I = objects.warning(disparity) 
-            print("I =",I)
+            print("\nI =",I)
+            
             # Combinar imagem de entrada e depth map
             img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
             combinedImg = np.hstack((img, disparity, objects))
@@ -39,7 +40,7 @@ if __name__ == "__main__":
             # Calculo do FPS
             end_time = time.time()
             fps = round(1/(end_time - start_time), 2)
-            
+            print("FPS:",fps)
             # Mostrar Imagem e FPS
             cv.putText(combinedImg, (f"FPS: {fps}"), (660, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (163,138,255), 2)
             cv.imshow("Depth Map", combinedImg)

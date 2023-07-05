@@ -11,7 +11,7 @@ class nearby_objects():
     def warning(self, img):
         # Seleciona os objetos que estão dentro do range de aviso - Imagem é Binarizada
         caution = cv.inRange(img, self.min, self.max) 
-        # Criar o contorno
+        # Criar o contorno e Definir a Intensidade
         caution, I = self.contour(caution, img)
         
         return caution, I
@@ -23,18 +23,21 @@ class nearby_objects():
         counturs, hier = cv.findContours(caution_copy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         
         # Desenha os contornos na imagem binarizada e efetua o calculo da intensidade de saída
-        I = np.zeros(len(counturs))
+        Imax = -1
+        rect = np.zeros(4)
         for cnt in range(len(counturs)):
             # Calcula a posição do retangulo
             x, y, w, h = cv.boundingRect(counturs[cnt])
-            
             # Calculo da intensidade de saída
-            I[cnt] = self.intensity(x, y, w, h, img, caution_copy)
-              
-            cv.rectangle(caution_copy, (x,y), (x+w,y+h), (255,255,255), 2)
+            I = self.intensity(x, y, w, h, img, caution_copy)
             
-        Imax = np.max(I)
-        
+            if I > Imax:
+                Imax = I
+                rect = [x, y, w, h]
+            
+        # Desenha o Retângulo  
+            cv.rectangle(caution_copy, (rect[0],rect[1]), (rect[0]+rect[2],rect[1]+rect[3]), (255,255,255), 2)    
+               
         return caution_copy, Imax
     
     def intensity(self, x, y, w, h, img, caution):
@@ -42,8 +45,8 @@ class nearby_objects():
         img_shape = img.shape
         
         # Centro da imagem
-        img_cx = img_shape[1]
-        img_cy = img_shape[0]
+        img_cx = img_shape[1]/2
+        img_cy = img_shape[0]/2
         
         # Distância do centro do retângulo ao centro da imagem
         d = np.sqrt(((x/2) - img_cx)**2 + ((y/2) - img_cy)**2)
@@ -52,25 +55,23 @@ class nearby_objects():
         
         
         # Pegar a média de intensidade do objeto selecionado:
-        # Pegar apenas o objeto selecionado com uma mascara
-        selected_object = cv.bitwise_and(img[x:x+w ,y:y+h], img[x:x+w ,y:y+h], mask=caution[x:x+w ,y:y+h])
+        # Pegar apenas o objeto selecionado com uma mascara 
+        selected_object = cv.bitwise_and(img[y:y+h, x:x+w], img[y:y+h, x:x+w], mask=caution[y:y+h, x:x+w])
         
         # Média de intensidade do objeto selecionado
-        try:
-            selected_object = selected_object.flatten()
-            soma = 0
-            for i in range(len(selected_object)):
-                if selected_object[i] > 0:
-                    soma = soma + selected_object[i]
-            mean_object = soma/len(selected_object)
-            
-            # Intensidade de saída (Imax=255 e Imin=0)
-            I = mean_object/(d+1)
-            
-        except:
-            I = 0
- 
-        return I
+        selected_object = selected_object.flatten()
+        soma = 0
+        n = 0
+        for i in range(len(selected_object)):
+            if selected_object[i] > 0:
+                soma = soma + selected_object[i]
+                n = n + 1
+        mean_object = soma/n
+    
+        # Intensidade de saída (Imax=255 e Imin=0)
+        I = mean_object/(d+1)
+        
+        return I 
         
         
         
