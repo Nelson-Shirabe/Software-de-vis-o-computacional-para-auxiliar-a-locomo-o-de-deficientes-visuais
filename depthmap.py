@@ -5,11 +5,7 @@ from tensorflow.lite.python.interpreter import Interpreter
 
 class depthEstimator():
     
-    def __init__(self):
-        # Atributos para contar o FPS
-        self.fps = 0
-        self.lastTime = time.time()
-        
+    def __init__(self):      
         # Inicialização do Modelo
         modelPath = "models/midasModel.tflite"
         self.interpreter = Interpreter(model_path = modelPath)
