@@ -67,7 +67,7 @@ class nearby_objects():
         mean_object = soma/n
     
         # Intensidade de saída (Imax=255 e Imin=0)
-        I = (mean_object/(d+1))*((n/(w*h)))
+        I = (mean_object/(d+1))*((w*h)/(img_shape[0]*img_shape[1]))
         
         return I 
         
