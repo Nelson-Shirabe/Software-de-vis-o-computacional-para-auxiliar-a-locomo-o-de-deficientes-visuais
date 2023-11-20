@@ -7,7 +7,7 @@ class depthEstimator():
     
     def __init__(self):      
         # Inicialização do Modelo
-        modelPath = "models/midasModel.tflite"
+        modelPath = "models/lite-model_midas_v2_1_small_1_lite_1.tflite"
         self.interpreter = Interpreter(model_path = modelPath)
         self.interpreter.allocate_tensors()
         
