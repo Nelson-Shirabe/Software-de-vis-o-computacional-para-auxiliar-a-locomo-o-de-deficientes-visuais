@@ -4,13 +4,13 @@ import depthmap
 import numpy as np
 import nearbyObjects
 
-if __name__ == "__main__":
-    
+
+def main():
     # Inicializar o modelo
     depth_estimator = depthmap.depthEstimator()
 
     # Inicializando WebCam
-    # Pegar video do celular usar como argumento: "http://192.168.0.11:4747/video"
+    # Pegar video do celular usar como argumento: "http://192.168.0.13:4747/video"
     # Video da WebCam do Not usar como argumento: 0, cv.CAP_DSHOW
     camera = cv.VideoCapture(0, cv.CAP_DSHOW)
     cv.namedWindow("Depth Map", cv.WINDOW_NORMAL)
@@ -102,7 +102,11 @@ if __name__ == "__main__":
         # Salvar uma imagem do Depth Map segurar "s" até salvar a imagem
         if cv.waitKey(1) == ord("s"):
             cv.imwrite("Amostra.png", disparity)
+            print("Imagem Salva")
         
         
     camera.release()
     cv.destroyAllWindows()
+    
+if __name__ == "__main__":
+    main()
